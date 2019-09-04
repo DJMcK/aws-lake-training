@@ -1,0 +1,51 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+
+Resources:
+    RawBucket:
+        Type: AWS::S3::Bucket
+        Properties:
+            BucketName: !Sub "${AWS::StackName}-raw"
+
+            BucketEncryption:
+                ServerSideEncryptionConfiguration:
+                    - ServerSideEncryptionByDefault:
+                          SSEAlgorithm: AES256
+
+            LifecycleConfiguration:
+                Rules:
+                    - Id: Archive
+                      Status: Enabled
+                      ExpirationInDays: 4 # For training purposes, we'll purge this data
+                      Transitions:
+                          - TransitionInDays: 1
+                            StorageClass: Glacier
+
+    LandingBucket:
+        Type: AWS::S3::Bucket
+        Properties:
+            BucketName: !Sub "${AWS::StackName}-landing"
+
+            BucketEncryption:
+                ServerSideEncryptionConfiguration:
+                    - ServerSideEncryptionByDefault:
+                          SSEAlgorithm: AES256
+
+            LifecycleConfiguration:
+                Rules:
+                    - Id: Archive
+                      Status: Enabled
+                      ExpirationInDays: 4 # For training purposes, we'll purge this data
+                      Transitions:
+                          - TransitionInDays: 1
+                            StorageClass: Glacier
+
+    CuratedBucket:
+        Type: AWS::S3::Bucket
+        Properties:
+            BucketName: !Sub "${AWS::StackName}-curated"
+
+            BucketEncryption:
+                ServerSideEncryptionConfiguration:
+                    - ServerSideEncryptionByDefault:
+                          SSEAlgorithm: AES256

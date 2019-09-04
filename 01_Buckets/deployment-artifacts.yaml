@@ -1,0 +1,11 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Resources:
+    Bucket:
+        Type: AWS::S3::Bucket
+        Properties:
+            BucketName: !Ref AWS::StackName
+
+            BucketEncryption:
+                ServerSideEncryptionConfiguration:
+                    - ServerSideEncryptionByDefault:
+                          SSEAlgorithm: AES256
