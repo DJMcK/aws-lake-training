@@ -35,4 +35,4 @@ To deploy the lake buckets, run:
 sam deploy --template-file ./lake-buckets.yaml --stack-name $STACK_NAME
 ```
 
-## [Next »](../02_Glue_Crawler/README.md)
+## [Next »](../02_EMR_Cluster/README.md)

@@ -38,4 +38,4 @@ Example:
 ssh -i ~/path/to/file.pem hadoop@<ID>.us-east-2.compute.amazonaws.com
 ```
 
-## [Next »](../04_FDA_Labels/README.md)
+## [Next »](../03_FDA_Labels/README.md)
