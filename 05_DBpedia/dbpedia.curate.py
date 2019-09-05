@@ -25,7 +25,7 @@ schema = StructType(
 training_data = "s3://"+BUCKET_LANDING+"/dbpedia/train.csv.gz"
 training_dataframe = spark.read.csv(training_data, header=False, schema=schema)
 training_dataframe.count()
-training_dataframe.write.mode("overwrite").parquet("s3://djm2-lake-curated/dbpedia/train/")
+training_dataframe.write.mode("overwrite").parquet("s3://"+BUCKET_CURATED+"/dbpedia/train/")
 
 ###
 #  Bring in the test data and convert to Parquet
