@@ -1,0 +1,17 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "AWS CloudFormation template to create the stack for the comprehend medical service"
+Resources: 
+  ComprehendMedSvcBucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        IgnorePublicAcls: true
+        BlockPublicPolicy: true
+        RestrictPublicBuckets: true      
+      BucketName: jr-comprehendmed-svc-1  # change this value to your bucket name
+      BucketEncryption: 
+        ServerSideEncryptionConfiguration:
+        - ServerSideEncryptionByDefault:
+            SSEAlgorithm: AES256

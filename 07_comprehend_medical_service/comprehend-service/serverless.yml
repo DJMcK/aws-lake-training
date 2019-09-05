@@ -1,0 +1,179 @@
+service: comprehend-service
+
+frameworkVersion: "=1.49.0"
+
+provider:
+  name: aws
+  runtime: python3.7
+  stage: dev
+  region: ${opt:region, 'us-east-2'}
+  memorySize: 1024
+  timeout: 900
+  reservedConcurrency: 1
+  deploymentBucket:
+    name: jr-comprehendmed-svc-1           # replace bucket name
+  deploymentPrefix: deploy-${self:service}   
+  environment:
+    bucket_name: jr-comprehendmed-svc-1     # replace bucket name
+  profile: training06 
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action: "states:StartExecution"
+      Resource: "arn:aws:states:#{AWS::Region}:#{AWS::AccountId}:stateMachine:comprehendStateMachine"
+
+    - Effect: "Allow"
+      Action: s3:*
+      Resource: 
+        - "arn:aws:s3:::jr-comprehendmed-svc-1/*"
+        - "arn:aws:s3:::jr-comprehendmed-svc-1"
+        - "arn:aws:s3:::djm1-aws-training-landing" 
+        - "arn:aws:s3:::djm1-aws-training-landing/fda/2019-08-10/drug/label/refined/*" 
+
+    - Effect: "Allow"
+      Action:
+        - comprehendmedical:DetectEntities
+        - comprehendmedical:DetectPHI
+      Resource: 
+        - "*"
+
+    - Effect: "Allow"
+      Action:
+        - athena:*
+      Resource: 
+        - "*"
+
+    - Effect: "Allow"
+      Action:
+        - glue:GetTable
+      Resource: 
+        - "*"
+
+    - Effect: "Allow"
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:BatchWriteItem
+      Resource: 
+        - "Fn::GetAtt": [ ComprehendOutputTable, Arn ]      
+
+    - Effect: Allow 
+      Action:
+        - logs:CreateLogGroup
+        - logs:CreateLogStream
+        - logs:PutLogEvents
+      Resource: "arn:aws:logs:#{AWS::Region}:#{AWS::AccountId}:log-group:/aws/lambda/*:*:*"     
+
+plugins:
+  - serverless-step-functions
+  - serverless-pseudo-parameters
+
+
+package:
+  exclude:
+    - __pycache__/**
+    - node_modules/**
+    - tests/**
+    - env/**
+    - package.json
+    - package-lock.json
+    - .vscode
+
+functions:
+  proxy:
+    handler: proxy.handler
+    environment:
+      statemachine_arn: "arn:aws:states:#{AWS::Region}:#{AWS::AccountId}:stateMachine:comprehendStateMachine"
+
+  queryAthena:
+    handler: query_athena.handler
+
+  callComprehend:
+    handler: call_comprehend.handler
+    layers:
+      - arn:aws:lambda:us-east-2:990712811979:layer:boto3layer:1
+
+  writeToDynamoDB:
+    handler: write_to_dynamodb.handler
+
+stepFunctions:
+  stateMachines:
+    comprehendStateMachine:
+      name: comprehendStateMachine
+      definition:
+        Comment: "Comprehend Tutorial state machine"
+        StartAt: QueryAthena
+        States:
+          QueryAthena:
+            Comment: "Queries Athena for indications"
+            Type: Task
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-queryAthena"
+            ResultPath: "$.data_node.query_results"
+            Next: CallComprehend
+          CallComprehend:
+            Comment: "Calls comprehend to extract entities"
+            Type: Task
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-callComprehend"
+            ResultPath: "$.data_node.comprehend_output"
+            Next: WriteToDynamoDB
+          WriteToDynamoDB:
+            Comment: "Write extracted entities to dynamodb"
+            Type: Task
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-writeToDynamoDB"
+            ResultPath: null
+            Next: Done            
+          Done:
+            Type: Pass
+            End: true  
+
+
+resources:
+  Resources:
+    ComprehendOutputTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: comprehendoutputtable
+        AttributeDefinitions:
+          - AttributeName: textId
+            AttributeType: S                                                   
+        KeySchema:
+          - AttributeName: textId
+            KeyType: HASH       
+        ProvisionedThroughput:
+          ReadCapacityUnits: "1"
+          WriteCapacityUnits: "1"  
+
+  Outputs:
+    ComprehendStateMachine:
+      Description: ARN of ComprehendStateMachine
+      Value:
+        Ref: ComprehendStateMachine
+        
+        
+# # you can add CloudFormation resource templates here
+# resources:
+#  Resources:
+# #    ComprehendMedSvcBucket:
+# #      Type: AWS::S3::Bucket
+# #      Properties:
+# #        BucketName: jr-comprehendmed-svc-1
+# #        BucketEncryption: 
+# #         ServerSideEncryptionConfiguration: 
+# #           ServerSideEncryptionByDefault: 
+# #             SSEAlgorithm: AES256
+
+
+#  Outputs:
+#   comprehendTutorialStepfunction:
+#     Description: ARN of Comprehend Tutorial StateMachine
+#     Value:
+#       Ref: ComprehendTutorialStateMachine
+# #     ComprehendMedSvcBucketName:
+# #       Description: "bucket for comprehend medical service artefacts"
+# #       Value:
+# #         Ref: ComprehendMedSvcBucket
