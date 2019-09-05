@@ -1,4 +1,4 @@
-# AWS Training '09
+# AWS Training '19
 
 1. [Setup](./00_Setup/README.md)
 2. [Create Lake Buckets](./01_Buckets/README.md)
