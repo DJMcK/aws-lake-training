@@ -45,4 +45,11 @@ In order to land the data, we will be using an EMR Cluster with a very large EC2
 4. Update the values for `BUCKET_LANDING` and `BUCKET_CURATED` with the appropriate values
 5. Copy the code and paste it into the `pyspark` shell
 
+## Ehance Data
+
+1. Connect to your EMR Cluster (as described in [04_EMR_Cluster](../04_EMR_Cluster/README.md))
+2. Run `pyspark`
+3. Open [`fda.03.enhance.py`](./fda.03.enhance.py) in an editor
+4. Copy the code and paste it into the `pyspark` shell
+
 ## [Next »](../05_DBpedia/README.md)

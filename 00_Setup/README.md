@@ -16,9 +16,11 @@
 
 1. Install [Homebrew](https://brew.sh/)
 2. Open Terminal
-3. Run: `brew tap aws/tap`
-4. Run: `brew install aws-cli`
-5. Run: `brew install aws-sam-cli`
+3. Run: `xcode-select --install`
+4. Run: `brew tap aws/tap`
+5. Run: `brew install python`
+6. Run: `brew install awscli`
+7. Run: `brew install aws-sam-cli`
 
 > **Note:** Full instructions available [here](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install-mac.html).
 
