@@ -1,6 +1,6 @@
 service: comprehend-service
 
-frameworkVersion: "=1.49.0"
+frameworkVersion: ">=1.49.0"
 
 provider:
   name: aws
@@ -15,7 +15,7 @@ provider:
   deploymentPrefix: deploy-${self:service}   
   environment:
     bucket_name: jr-comprehendmed-svc-1     # replace bucket name
-  profile: training06 
+  # profile: training06 
 
   iamRoleStatements:
     - Effect: "Allow"
@@ -145,8 +145,8 @@ resources:
           - AttributeName: textId
             KeyType: HASH       
         ProvisionedThroughput:
-          ReadCapacityUnits: "1"
-          WriteCapacityUnits: "1"  
+          ReadCapacityUnits: "15"
+          WriteCapacityUnits: "15"  
 
   Outputs:
     ComprehendStateMachine:
