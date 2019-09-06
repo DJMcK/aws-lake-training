@@ -15,7 +15,7 @@ s3 = boto3.resource('s3')
 athena = boto3.client('athena')
 
 # setup configuration
-S3_OUTPUT = 's3://jr-comprehendmed-svc-1/athenaoutput'
+S3_OUTPUT = 's3://jr-comprehendmed-svc-1/athenaoutput'   # TODO replace bucket name
 DATABASE = 'djm2-lake'
 TABLE = 'druglabelsrefined'
 RETRY_COUNT = 10

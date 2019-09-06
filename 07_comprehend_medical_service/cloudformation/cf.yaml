@@ -10,7 +10,7 @@ Resources:
         IgnorePublicAcls: true
         BlockPublicPolicy: true
         RestrictPublicBuckets: true      
-      BucketName: jr-comprehendmed-svc-1  # change this value to your bucket name
+      BucketName: <>  # TODO change this value to your bucket name. please include your initials in the bucket name. example: jr-comprehendmed-svc-1
       BucketEncryption: 
         ServerSideEncryptionConfiguration:
         - ServerSideEncryptionByDefault:

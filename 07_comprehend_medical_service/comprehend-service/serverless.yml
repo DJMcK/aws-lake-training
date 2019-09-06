@@ -11,10 +11,10 @@ provider:
   timeout: 900
   reservedConcurrency: 1
   deploymentBucket:
-    name: jr-comprehendmed-svc-1           # replace bucket name
+    name: jr-comprehendmed-svc-1           # TODO replace bucket name
   deploymentPrefix: deploy-${self:service}   
   environment:
-    bucket_name: jr-comprehendmed-svc-1     # replace bucket name
+    bucket_name: jr-comprehendmed-svc-1     # TODO replace bucket name
   # profile: training06 
 
   iamRoleStatements:
@@ -25,8 +25,8 @@ provider:
     - Effect: "Allow"
       Action: s3:*
       Resource: 
-        - "arn:aws:s3:::jr-comprehendmed-svc-1/*"
-        - "arn:aws:s3:::jr-comprehendmed-svc-1"
+        - "arn:aws:s3:::jr-comprehendmed-svc-1/*"    # TODO replace bucket name
+        - "arn:aws:s3:::jr-comprehendmed-svc-1"      # TODO replace bucket name
         - "arn:aws:s3:::djm2-lake-curated" 
         - "arn:aws:s3:::djm2-lake-curated/fda/*" 
         # - "arn:aws:s3:::djm1-aws-training-landing" 
@@ -140,7 +140,7 @@ resources:
     ComprehendOutputTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: comprehendoutputtable
+        TableName: comprehendoutputtable          # TODO replace table name
         AttributeDefinitions:
           - AttributeName: textId
             AttributeType: S                                                   
