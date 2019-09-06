@@ -10,7 +10,7 @@
 3. Quick overview of Comprehend Medical interface
 4. Comprehend Medical pipeline demo
 
-## Pre-requisites
+## Setup
 #### Create bucket in S3
 * Create bucket using the cloudformation script. 
 * **IMPORTANT: Replace bucket name in the commented part.**
