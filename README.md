@@ -7,3 +7,4 @@
 5. [Ingest DBpedia](./04_DBpedia/README.md)
 5. [Terminate EMR Cluster](./05_Terminate_EMR_Cluster/README.md)
 6. [Setup Glue Crawler](./06_Glue_Crawler/README.md)
+7. [Comprehend Medical, Lambda, & StepFunctions](./07_comprehend_medical_service/README.md)
