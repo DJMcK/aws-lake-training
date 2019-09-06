@@ -9,6 +9,7 @@ The FDA provides access to all of the [OpenFDA](https://open.fda.gov/) data via 
 ```bash
 aws s3 sync s3://download.open.fda.gov/2019-08-10/drug/label s3://$STACK_NAME-raw/fda/2019-08-10/drug/label
 ```
+> **Windows:** `aws s3 sync s3://download.open.fda.gov/2019-08-10/drug/label s3://%STACK_NAME%-raw/fda/2019-08-10/drug/label`
 
 > **Note:** The above command assumes that you have the `STACK_NAME` variable set in your terminal from our setup steps.
 

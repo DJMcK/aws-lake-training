@@ -11,6 +11,12 @@ aws s3 cp train.csv.gz s3://$STACK_NAME-landing/dbpedia/
 aws s3 cp test.csv.gz s3://$STACK_NAME-landing/dbpedia/
 ```
 
+**Windows:**
+```dos
+aws s3 cp train.csv.gz s3://%STACK_NAME%-landing/dbpedia/
+aws s3 cp test.csv.gz s3://%STACK_NAME%-landing/dbpedia/
+```
+
 ## Refine Data
 
 1. Connect to your EMR Cluster (as described in [04_EMR_Cluster](../02_EMR_Cluster/README.md))

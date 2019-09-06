@@ -6,7 +6,7 @@
 
 1. Install the [AWS CLI](https://s3.amazonaws.com/aws-cli/AWSCLI64PY3.msi)
 2. Install the [AWS SAM CLI](https://github.com/awslabs/aws-sam-cli/releases/latest/download/AWS_SAM_CLI_64_PY3.msi)
-3. Install [Putty](https://the.earth.li/~sgtatham/putty/latest/w64/putty-64bit-0.72-installer.msi)
+3. Install [PuTTY](https://the.earth.li/~sgtatham/putty/latest/w64/putty-64bit-0.72-installer.msi)
 
 > **Assumption:** all downloads are 64-bit distributions.
 

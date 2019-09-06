@@ -32,10 +32,25 @@ In this section we'll go through the process of setting up an EMR Cluster.
 
 Once your cluster is in a `provisioned` state. You can click on "SSH" next to "Master public DNS" to retrieve the SSH connection string. You can copy this command and simply update the path to your PEM file (created earlier by the key pair step).
 
-Example:
-
 ```bash
-ssh -i ~/path/to/file.pem hadoop@<ID>.us-east-2.compute.amazonaws.com
+aws emr ssh --cluster-id <ID> --key-pair-file ~/path/to/file.pem
+```
+
+### Windows - `adding extra steps since 1985` 👎
+
+On Windows we need to perform a few extra steps in order to connect if we are just using a tool like PuTTY.
+
+1. From the start menu find "PuTTYgen"
+2. Click "Load"
+3. In the bottom right dropdown, change from "PuTTY Private Key [...]" to "All Files"
+4. Browse to where you stored your EC2 Key Pair file
+5. Open the file
+6. You should receive a message "Successfully imported [...]"
+7. Click "Save private key"
+8. Save to an easy to access location
+
+```console
+aws emr ssh --cluster-id <ID> --key-pair-file C:\path\to\file.ppk
 ```
 
 ## [Next »](../03_FDA_Labels/README.md)

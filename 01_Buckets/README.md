@@ -5,11 +5,13 @@
 
 Before deploying anything, first we give our lake a unique name:
 
+**Bash:**
+
 ```bash
 export STACK_NAME="<NAME>"
 ```
 
-> **Example:** `export STACK_NAME="djm-lake"`
+> **Windows:** `set STACK_NAME="<NAME>"`
 
 ## Deploy: Artifacts Bucket
 
@@ -20,6 +22,7 @@ To deploy this bucket, run the following command:
 ```bash
 sam deploy --template-file ./deployment-artifacts.yaml --stack-name $STACK_NAME-deployment-artifacts
 ```
+> **Windows:** `sam deploy --template-file ./deployment-artifacts.yaml --stack-name %STACK_NAME%-deployment-artifacts`
 
 ## Deploy: Lake Buckets
 
@@ -34,5 +37,6 @@ To deploy the lake buckets, run:
 ```bash
 sam deploy --template-file ./lake-buckets.yaml --stack-name $STACK_NAME
 ```
+> **Windows:** `sam deploy --template-file ./lake-buckets.yaml --stack-name %STACK_NAME%`
 
 ## [Next »](../02_EMR_Cluster/README.md)
