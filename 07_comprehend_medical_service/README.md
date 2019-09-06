@@ -1,5 +1,9 @@
 # Comprehend Medical Serverless Workflow Repository
 
+## Architecture
+
+![alt text](images/architecture.png "Logo Title Text 1")
+
 ## Outline
 1. Build demo lambda function
 2. Why use a framework such as Serverless or SAM?
@@ -42,10 +46,10 @@ npm install --save-dev serverless-step-functions
 npm install serverless-pseudo-parameters
 ```
 
-
-## Architecture
-
-![alt text](images/architecture.png "Logo Title Text 1")
+#### Deploy
+```
+serverless deploy --verbose --force
+```
 
 #### Notes:
 
