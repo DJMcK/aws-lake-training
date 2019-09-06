@@ -1,5 +1,11 @@
 # Comprehend Medical Serverless Workflow Repository
 
+## Outline
+1. Build demo lambda function
+2. Why use a framework such as Serverless or SAM?
+3. Quick overview of Comprehend Medical interface
+4. Comprehend Medical pipeline demo
+
 ## Pre-requisites
 #### Create bucket in S3
 * Create bucket using the cloudformation script. 
@@ -40,3 +46,12 @@ npm install serverless-pseudo-parameters
 ## Architecture
 
 ![alt text](images/architecture.png "Logo Title Text 1")
+
+#### Notes:
+
+###### Demo Lambda
+Numpy layer
+arn:aws:lambda:us-east-2:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
+
+###### Serverless - npm config
+check email
