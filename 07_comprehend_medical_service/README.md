@@ -13,7 +13,7 @@
 ## Setup
 #### Create bucket in S3
 * Create bucket using the cloudformation script. 
-* **IMPORTANT: Replace bucket name in the commented part.**
+* <span style="color:blue">IMPORTANT: Replace bucket name in the commented part.</span>
 * Create folders:
     * athenaoutput
     * comprehendoutput
