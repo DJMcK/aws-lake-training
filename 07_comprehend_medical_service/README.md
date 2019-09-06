@@ -20,7 +20,8 @@
     * uploadsfolder
 
 #### Clone repository
-* **IMPORTANT: Replace bucket name in serverless.yml to your bucket.**
+* *IMPORTANT: Replace bucket name in serverless.yml to your bucket.*
+* *IMPORTANT: Change DynamoDB table name.*
 
 #### Install Serverless Framework
 * Install nodejs from https://nodejs.org/en/download/
