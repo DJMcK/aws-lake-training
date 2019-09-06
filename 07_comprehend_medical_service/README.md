@@ -1,4 +1,4 @@
-Comprehend Medical Serverless Workflow Repository
+# Comprehend Medical Serverless Workflow Repository
 
 ## Pre-requisites
 #### Create bucket in S3
