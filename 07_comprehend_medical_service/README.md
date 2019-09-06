@@ -2,15 +2,19 @@
 
 ## Pre-requisites
 #### Create bucket in S3
-* Create bucket using the cloudformation script. (Replace bucket name in the commented part.)
+* Create bucket using the cloudformation script. 
+* ** IMPORTANT: Replace bucket name in the commented part. **
 * Create folders:
     * athenaoutput
     * comprehendoutput
     * uploadsfolder
 
+#### Clone repository
+* ** IMPORTANT: Replace bucket name in serverless.yml to your bucket. **
+
 #### Install Serverless Framework
 * Install nodejs from https://nodejs.org/en/download/
-* [We need to set the proxy to do an npm install of the serverless framework. Please run the 2 commands attached in your email woth subject 'npm config set' before proceeding]
+* **We need to set the proxy to do an npm install of the serverless framework. Please run the 2 commands attached in your email with subject 'npm config set' before proceeding**
 
 * Install serverless framework
     ```
@@ -23,7 +27,7 @@
 
 Reference: https://serverless.com/framework/docs/providers/aws/guide/installation/
 
-## Plugins
+#### Plugins
 * change directory to comprehend-service folder in your terminal.
 * install following plugins
 ```
