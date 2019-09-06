@@ -27,8 +27,10 @@ provider:
       Resource: 
         - "arn:aws:s3:::jr-comprehendmed-svc-1/*"
         - "arn:aws:s3:::jr-comprehendmed-svc-1"
-        - "arn:aws:s3:::djm1-aws-training-landing" 
-        - "arn:aws:s3:::djm1-aws-training-landing/fda/2019-08-10/drug/label/refined/*" 
+        - "arn:aws:s3:::djm2-lake-curated" 
+        - "arn:aws:s3:::djm2-lake-curated/fda/*" 
+        # - "arn:aws:s3:::djm1-aws-training-landing" 
+        # - "arn:aws:s3:::djm1-aws-training-landing/fda/2019-08-10/drug/label/refined/*" 
 
     - Effect: "Allow"
       Action:
@@ -46,6 +48,7 @@ provider:
     - Effect: "Allow"
       Action:
         - glue:GetTable
+        - glue:GetPartitions
       Resource: 
         - "*"
 
