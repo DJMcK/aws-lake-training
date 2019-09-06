@@ -25,4 +25,4 @@ In this section we will introduce you to [AWS Glue](https://aws.amazon.com/glue/
 11. Give it a unique name (ex. `djm-lake`)
 12. Proceed & finish
 
-## [Next »](../03_EMR_Cluster/README.md)
+## [Next »](../07_comprehend_medical_service/README.md)
