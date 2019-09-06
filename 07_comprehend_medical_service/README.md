@@ -3,14 +3,14 @@
 ## Pre-requisites
 #### Create bucket in S3
 * Create bucket using the cloudformation script. 
-* ** IMPORTANT: Replace bucket name in the commented part. **
+* **IMPORTANT: Replace bucket name in the commented part.**
 * Create folders:
     * athenaoutput
     * comprehendoutput
     * uploadsfolder
 
 #### Clone repository
-* ** IMPORTANT: Replace bucket name in serverless.yml to your bucket. **
+* **IMPORTANT: Replace bucket name in serverless.yml to your bucket.**
 
 #### Install Serverless Framework
 * Install nodejs from https://nodejs.org/en/download/
