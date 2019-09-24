@@ -1,15 +1,15 @@
 # FDA Drug Labels Data
 
-The FDA provides a wealth of large data sets via the [OpenFDA](https://open.fda.gov/) website and APIs. We will leverage one of these data sets in particiular; the [Drug Labels](https://open.fda.gov/apis/drug/label/).
+The FDA provides a wealth of large data sets via the [OpenFDA](https://open.fda.gov/) website and APIs. We will leverage one of these data sets in particular; the [Drug Labels](https://open.fda.gov/apis/drug/label/).
 
 ## Raw Data
 
 The FDA provides access to all of the [OpenFDA](https://open.fda.gov/) data via a public S3 bucket. We can pull this data in directly using the following command:
 
 ```bash
-aws s3 sync s3://download.open.fda.gov/2019-08-10/drug/label s3://$STACK_NAME-raw/fda/2019-08-10/drug/label
+aws s3 sync s3://download.open.fda.gov/2019-08-10/drug/label s3://$STACK_NAME-raw/fda-source/2019-08-10/drug/label
 ```
-> **Windows:** `aws s3 sync s3://download.open.fda.gov/2019-08-10/drug/label s3://%STACK_NAME%-raw/fda/2019-08-10/drug/label`
+> **Windows:** `aws s3 sync s3://download.open.fda.gov/2019-08-10/drug/label s3://%STACK_NAME%-raw/fda-source/2019-08-10/drug/label`
 
 > **Note:** The above command assumes that you have the `STACK_NAME` variable set in your terminal from our setup steps.
 
@@ -28,13 +28,13 @@ In order to land the data, we will be using an EMR Cluster with a very large EC2
 5. `explode` the list of results creating a new structure where each drug is now a row
 6. Land the new optimized data set as `gzip` compressed `json` files
 
-**The instructor will demonstrate:**
+**Steps:**
 
-1. Creating an EMR Cluster
-2. Connecting using SSH
-3. Running the Spark Shell (in our case [`pyspark`](https://spark.apache.org/docs/latest/api/python/index.html))
-4. Executing the code in [`fda.01.land.py`](./fda.01.land.py) to achieve our above objectives for this stage
-5. Provide the class with access to the landed date and command to sync this to their "landing" buckets
+1. Connect to your EMR Cluster (as described in [04_EMR_Cluster](../02_EMR_Cluster/README.md))
+2. Run `pyspark --driver-memory 10G --executor-memory 10G --executor-cores 1`
+3. Open [`fda.01.land.py`](./fda.01.land.py) in an editor
+4. Update the values for `BUCKET_RAW` and `BUCKET_LANDING` with the appropriate values
+5. Copy the code and paste it into the `pyspark` shell
 
 ## Curate Data
 
@@ -45,10 +45,5 @@ In order to land the data, we will be using an EMR Cluster with a very large EC2
 3. Open [`fda.02.curate.py`](./fda.02.curate.py) in an editor
 4. Update the values for `BUCKET_LANDING` and `BUCKET_CURATED` with the appropriate values
 5. Copy the code and paste it into the `pyspark` shell
-
-## Enhance Data
-
-1. Open [`fda.03.enhance.py`](./fda.03.enhance.py) in an editor
-2. Copy the code and paste it into the `pyspark` shell
 
 ## [Next »](../04_DBpedia/README.md)

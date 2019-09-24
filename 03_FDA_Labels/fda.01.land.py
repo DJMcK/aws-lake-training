@@ -7,8 +7,8 @@ from pyspark.sql.functions import explode
 # CONFIGURATION
 ####
 BUCKET_FDA = "download.open.fda.gov"
-BUCKET_RAW = "djm2-lake-raw"
-BUCKET_LANDING = "djm2-lake-landing"
+BUCKET_RAW = "djm-lake-raw"
+BUCKET_LANDING = "djm-lake-landing"
 
 
 # Deflate
@@ -45,12 +45,12 @@ fda_data = fda_files.map(deflate)
 
 # Store the JSON with GZIP compression
 fda_data.saveAsTextFile(
-    path="s3://"+BUCKET_RAW+"/fda-gzip/2019-08-10/drug/label/",
+    path="s3://"+BUCKET_RAW+"/fda/2019-08-10/drug/label/",
     compressionCodecClass="org.apache.hadoop.io.compress.GzipCodec"
 )
 
 # Read the JSON data as a data frame
-raw_data = "s3://"+BUCKET_RAW+"/fda-gzip/2019-08-10/drug/label/part-*"
+raw_data = "s3://"+BUCKET_RAW+"/fda/2019-08-10/drug/label/part-*"
 dataframe = spark.read.option(
     "multiLine", True
 ).option(
