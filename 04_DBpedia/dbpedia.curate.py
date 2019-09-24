@@ -3,8 +3,8 @@ from pyspark.sql.types import IntegerType, StructField, StructType, StringType
 ####
 # CONFIGURATION
 ####
-BUCKET_LANDING = "djm2-lake-landing"
-BUCKET_CURATED = "djm2-lake-curated"
+BUCKET_LANDING = "djm-lake-landing"
+BUCKET_CURATED = "djm-lake-curated"
 
 ###
 #  Given that the source files (CSV files) does not have a header row
