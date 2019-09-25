@@ -24,7 +24,7 @@ def handler(event, context):
         print(">>> bucket name " + bucket_name)
         print(">>> comprehend output bucket name " + comprehend_output_bucket_name)
         results_file = event['data_node']['query_results']['results_file']
-        query_execution_id = event['data_node']['query_results']['query_execution_id']
+        # query_execution_id = event['data_node']['query_results']['query_execution_id']
 
         # read the results file
         response = s3.Object(bucket_name, results_file).get()
@@ -70,7 +70,8 @@ def handler(event, context):
                 json.dump(data_to_persist['datalist'], outfile)
 
         # setup the S3 url to write the enriched data. 
-        comprehend_output = 'fda-product-indications/comprehendoutput/' + query_execution_id + '/comprehended.json'
+        # comprehend_output = 'fda-product-indications/comprehendoutput/' + query_execution_id + '/comprehended.json'
+        comprehend_output = 'fda-product-indications/comprehendoutput/comprehended.json'
         
         # write to s3 
         s3.meta.client.upload_file('/tmp/comprehended.json', Bucket = comprehend_output_bucket_name, Key = comprehend_output, ExtraArgs={'ServerSideEncryption':'AES256'})
