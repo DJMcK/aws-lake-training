@@ -4,6 +4,8 @@ import time
 import urllib
 import os
 import csv
+import pandas as pd
+import numpy as np
 
 import logging
 logger = logging.getLogger()
@@ -21,46 +23,52 @@ def handler(event, context):
         # get the url of the athena results file from the event
         bucket_name = os.environ['bucket_name']
         comprehend_output_bucket_name = os.environ['comprehend_output_bucket_name']
+        file_keyname = event['data_node']['query_results']['results_file']   
         print(">>> bucket name " + bucket_name)
         print(">>> comprehend output bucket name " + comprehend_output_bucket_name)
+        print(">>> comprehend output file name " + file_keyname)
         results_file = event['data_node']['query_results']['results_file']
         # query_execution_id = event['data_node']['query_results']['query_execution_id']
 
-        # read the results file
-        response = s3.Object(bucket_name, results_file).get()
-        #convert response to lines of csv
-        lines = response['Body'].read().decode('utf-8').split('\n')
+        # read the iteration parameters from the event
+        startIndex = event['iterator']['comprehendedItems']
+        chunksize = event['iterator']['comprehend_chunksize']
+        totalItemsToComprehend = event['iterator']['totalItemsToComprehend'] 
+        iteration_num = event['iterator']['iteration_num'] 
 
-        # convert each line of the csv to a json format
-        recordsList = []
-        for row in csv.DictReader(lines):
-            logger.info(json.loads(json.dumps(row)))
-            recordsList.append(json.loads(json.dumps(row)))
-        #     print("------")
+        if ((startIndex + chunksize) <= totalItemsToComprehend):
+            finalIndex = startIndex + chunksize
+        else:
+            finalIndex = totalItemsToComprehend
+        
+        # read the csv file into a dataframe and pull out a subset (startIndex - finalIndex)
+        data = pd.read_csv(read_file_from_s3(bucket_name, file_keyname))         
+        data_subset = data[startIndex:finalIndex]
+        data_subset = data_subset.fillna('')
 
+
+        # iterate through the pandas datframe subset and call comprehend medical
         data_to_persist = {}
         datalist = []
-
-        for record in recordsList:
-                dataitem = {}
-                dataitem['id'] = record['id']
-                text_list = []
-                # if indication_and_usage filed is empty -> replace the corresponding fields in the dataitem with NA.
-                # also, we do not run the entity extraction on these empty texts
-                temptext = record['indications_and_usage']
-                if temptext:
-                        # dataitem['indications_and_usage'] = temptext
-                        result = client.detect_entities(Text= record['indications_and_usage'])
-                        entities = result['Entities']
-                        for entity in entities:
-                                print('Entity', entity)
-                                text_list.append(entity['Text'])
-                        # dataitem['extracted_entities'] = result['Entities']
-                        dataitem['extracted_text'] = text_list
-                else:
-                        dataitem['indications_and_usage'] = 'NA'
-                        dataitem['extracted_entities'] = 'NA'
-                datalist.append(dataitem)
+        for row in data_subset.itertuples():            
+            dataitem = {}
+            dataitem['id'] = row.id
+            print(row.id)
+            text_list = []
+            # if indication_and_usage filed is empty -> replace the corresponding fields in the dataitem with NA.
+            # also, we do not run the entity extraction on these empty texts
+            temptext = row.indications_and_usage
+            print(row.indications_and_usage)
+            if temptext:
+                result = client.detect_entities(Text = temptext)
+                entities = result['Entities']
+                for entity in entities:
+                    text_list.append(entity['Text'])
+                dataitem['extracted_text'] = text_list
+            else:
+                dataitem['indications_and_usage'] = 'NA'
+                dataitem['extracted_entities'] = 'NA'
+            datalist.append(dataitem)
         data_to_persist['datalist'] = datalist
 
         print("^^^^")
@@ -69,11 +77,21 @@ def handler(event, context):
         with open('/tmp/comprehended.json', 'w') as outfile:
                 json.dump(data_to_persist['datalist'], outfile)
 
-        # setup the S3 url to write the enriched data. 
-        # comprehend_output = 'fda-product-indications/comprehendoutput/' + query_execution_id + '/comprehended.json'
-        comprehend_output = 'fda-product-indications/comprehendoutput/comprehended.json'
+        # setup the S3 url to write the comprehended data 
+        comprehend_output = 'fda-product-indications/comprehendoutput/comprehended-' + str(iteration_num) + '.json'
         
         # write to s3 
         s3.meta.client.upload_file('/tmp/comprehended.json', Bucket = comprehend_output_bucket_name, Key = comprehend_output, ExtraArgs={'ServerSideEncryption':'AES256'})
-    # send the url of the written output file to the next lambda in the chain
-    return comprehend_output        
+
+        # do iteration housekeeping
+        prev_comprehended_items = int(event['iterator']['comprehendedItems'])
+        event['iterator']['comprehendedItems'] = len(data_subset) + prev_comprehended_items
+        event['iterator']['iteration_num'] = iteration_num + 1
+
+        # send the url of the written output file to the next lambda in the chain
+        return event['iterator']     
+
+def read_file_from_s3(bucket_name, key):
+    print(">> reading S3 object...")
+    response = s3.Object(bucket_name, key).get()
+    return response['Body']      

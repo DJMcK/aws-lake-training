@@ -4,10 +4,10 @@ frameworkVersion: ">=1.49.0"
 
 provider:
   name: aws
-  runtime: python3.7
+  runtime: python3.6
   stage: dev
   region: ${opt:region, 'us-east-2'}
-  memorySize: 1024
+  memorySize: 3008
   timeout: 900
   reservedConcurrency: 1
   deploymentBucket:
@@ -27,6 +27,8 @@ provider:
       Resource: 
         - "arn:aws:s3:::jr-comprehendmed-svc-1/*"    # TODO replace bucket name
         - "arn:aws:s3:::jr-comprehendmed-svc-1"      # TODO replace bucket name
+        - "arn:aws:s3:::djm-lake-landing" 
+        - "arn:aws:s3:::djm-lake-landing/fda-product-indications/*" 
         - "arn:aws:s3:::djm-lake-curated" 
         - "arn:aws:s3:::djm-lake-curated/fda-product/*" 
         - "arn:aws:s3:::djm-lake-curated/fda-product-indications/*" 
@@ -96,15 +98,34 @@ functions:
   queryAthena:
     handler: query_athena.handler
 
+  configureCount:
+    handler: configure_count.handler
+    environment:
+      comprehend_chunksize: 500
+    layers:
+      - arn:aws:lambda:${self:provider.region}:259788987135:layer:AWSLambda-Python36-SciPy1x:2
+      - arn:aws:lambda:${self:provider.region}:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
+
+  iterator:
+    handler: iterator.handler
+
   callComprehend:
     handler: call_comprehend.handler
     environment:
-      comprehend_output_bucket_name: djm-lake-curated     # TODO replace bucket name
+      comprehend_output_bucket_name: djm-lake-landing     # TODO replace bucket name
     layers:
       - arn:aws:lambda:us-east-2:990712811979:layer:boto3layer:1
+      - arn:aws:lambda:${self:provider.region}:259788987135:layer:AWSLambda-Python36-SciPy1x:2
+      - arn:aws:lambda:${self:provider.region}:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
 
-  writeToDynamoDB:
-    handler: write_to_dynamodb.handler
+  concatenateAndMoveToCurated:
+    handler: concatenate_and_move_to_curated.handler
+    environment:
+      comprehend_landing_bucket_name: djm-lake-landing     # TODO replace bucket name
+      comprehend_curated_bucket_name: djm-lake-curated     # TODO replace bucket name    
+    layers:
+      - arn:aws:lambda:${self:provider.region}:259788987135:layer:AWSLambda-Python36-SciPy1x:2
+      - arn:aws:lambda:${self:provider.region}:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
 
 stepFunctions:
   stateMachines:
@@ -119,19 +140,41 @@ stepFunctions:
             Type: Task
             Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-queryAthena"
             ResultPath: "$.data_node.query_results"
-            Next: CallComprehend
+            Next: ConfigureCount
+          ConfigureCount:
+            Type: Task
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-configureCount"
+            ResultPath: "$.iterator"
+            Next: Iterator 
+          Iterator:
+            Type: Task
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-iterator"
+            ResultPath: "$.iterator"
+            Next: IsRecordCountReached  
+          IsRecordCountReached:
+            Type: Choice
+            Choices:
+              - Variable: "$.iterator.continue_iterating"
+                BooleanEquals: True 
+                Next: CallComprehend
+              - Variable: "$.iterator.continue_iterating"
+                BooleanEquals: False
+                Next: IterationComplete            
           CallComprehend:
             Comment: "Calls comprehend to extract entities"
             Type: Task
             Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-callComprehend"
-            ResultPath: "$.data_node.comprehend_output"
-            Next: WriteToDynamoDB
-          WriteToDynamoDB:
-            Comment: "Write extracted entities to dynamodb"
+            ResultPath: "$.iterator"
+            Next: Iterator
+          IterationComplete:
+            Type: Pass
+            Next: ConcatenateAndMoveToCurated   
+          ConcatenateAndMoveToCurated:
+            Comment: "Calls comprehend to extract entities"
             Type: Task
-            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-writeToDynamoDB"
-            ResultPath: null
-            Next: Done            
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-concatenateAndMoveToCurated"
+            ResultPath: "$.iterator"
+            Next: Done                     
           Done:
             Type: Pass
             End: true  
