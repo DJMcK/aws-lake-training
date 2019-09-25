@@ -58,6 +58,7 @@ def handler(event, context):
             # if indication_and_usage filed is empty -> replace the corresponding fields in the dataitem with NA.
             # also, we do not run the entity extraction on these empty texts
             temptext = row.indications_and_usage
+            temptext = temptext[0:20000]  # use the first 20000 characters. DetectEntities operation has a  size limit of 20000
             print(row.indications_and_usage)
             if temptext:
                 result = client.detect_entities(Text = temptext)
