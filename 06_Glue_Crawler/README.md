@@ -15,14 +15,32 @@ In this section we will introduce you to [AWS Glue](https://aws.amazon.com/glue/
 1. From the AWS Glue Dashboard
 2. Click "Add Crawler"
 3. Give the crawler a unique name (ex. `djm-lake-crawler`)
+![Crawler Name](./assets/glue-crawler-name.png "Crawler Name")
 4. Proceed with "Next" until you reach "Add a Data Store"
 5. Select your "Curated" data lake bucket from S3 (ex. `djm-curated`)
+![Crawler Data Store](./assets/glue-crawler-datastore.png "Crawler Data Store")
 6. Proceed with "Next" until you reach "Choose an IAM Role"
 7. Select "Create an IAM Role"
 8. Give it a unique name (ex. `djm-lake`)
-9. Proceed with "Next" until you reach "Configure the crawler's output"
+![Crawler IAM Role](./assets/glue-crawler-iam.png "Crawler IAM Role")
+9.  Proceed with "Next" until you reach "Configure the crawler's output"
 10. Click "Add database"
+![Crawler Database](./assets/glue-crawler-database.png "Crawler Database")
 11. Give it a unique name (ex. `djm-lake`)
+![Crawler Output](./assets/glue-crawler-output.png "Crawler Output")
 12. Proceed & finish
+
+## Run The Crawler
+
+1. From the [AWS Glue Crawler Dashboard](https://us-east-2.console.aws.amazon.com/glue/home?region=us-east-2#catalog:tab=crawlers)
+2. Click on your newly created Crawler
+3. Click "Run crawler"
+
+The Crawler will now do the following:
+
+1. Look at the configured S3 bucket
+2. Identify blobs it can consume
+3. Automatically infer common data structures
+4. Populate your configured AWS Athena database with tables for the data identified
 
 ## [Next »](../07_comprehend_medical_service/README.md)

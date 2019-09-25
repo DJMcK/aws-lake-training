@@ -23,18 +23,23 @@ In this section we'll go through the process of setting up an EMR Cluster.
 1. Go to the [AWS **EMR** Dashboard](https://us-east-2.console.aws.amazon.com/elasticmapreduce)
 2. Click "Create Cluster"
 3. Give your cluster a unique name (ex. `DJM`)
+![General Configuration](./assets/emr-general-config.png "General Configuration")
 4. Under "Software configuration" select `Spark: [...]`
+![Software Configuration](./assets/emr-software-config.png "Software Configuration")
 5. Under "Hardware configuration" select `m5.xlarge`
 6. Under "Hardware configuration" set "Number of Instances" to `4`
+![Hardware Configuration](./assets/emr-hardware-config.png "Hardware Configuration")
 7. Under "Security and access" select your "EC2 key pair"
+![Security & Access Configuration](./assets/emr-security-config.png "Security & Access Configuration")
 
 ## Connect to the EMR Master
 
 Once your cluster is in a `provisioned` state. You can click on "SSH" next to "Master public DNS" to retrieve the SSH connection string. You can copy this command and simply update the path to your PEM file (created earlier by the key pair step).
 
-```bash
-aws emr ssh --cluster-id <ID> --key-pair-file ~/path/to/file.pem
-```
+> **Tip:** You can use the AWS CLI to connect using the unique identifier of your cluster:
+> ```bash
+> aws emr ssh --cluster-id <ID> --key-pair-file ~/path/to/file.pem
+> ```
 
 ### Windows - `adding extra steps since 1985` 👎
 
