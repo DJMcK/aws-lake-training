@@ -20,6 +20,9 @@ def handler(event, context):
         
         # get the url of the athena results file from the event
         bucket_name = os.environ['bucket_name']
+        comprehend_output_bucket_name = os.environ['comprehend_output_bucket_name']
+        print(">>> bucket name " + bucket_name)
+        print(">>> comprehend output bucket name " + comprehend_output_bucket_name)
         results_file = event['data_node']['query_results']['results_file']
         query_execution_id = event['data_node']['query_results']['query_execution_id']
 
@@ -33,7 +36,7 @@ def handler(event, context):
         for row in csv.DictReader(lines):
             logger.info(json.loads(json.dumps(row)))
             recordsList.append(json.loads(json.dumps(row)))
-            print("------")
+        #     print("------")
 
         data_to_persist = {}
         datalist = []
@@ -41,29 +44,35 @@ def handler(event, context):
         for record in recordsList:
                 dataitem = {}
                 dataitem['id'] = record['id']
+                text_list = []
                 # if indication_and_usage filed is empty -> replace the corresponding fields in the dataitem with NA.
                 # also, we do not run the entity extraction on these empty texts
                 temptext = record['indications_and_usage']
                 if temptext:
-                        dataitem['indications_and_usage'] = temptext
+                        # dataitem['indications_and_usage'] = temptext
                         result = client.detect_entities(Text= record['indications_and_usage'])
                         entities = result['Entities']
                         for entity in entities:
                                 print('Entity', entity)
-                        dataitem['extracted_entities'] = result['Entities']
+                                text_list.append(entity['Text'])
+                        # dataitem['extracted_entities'] = result['Entities']
+                        dataitem['extracted_text'] = text_list
                 else:
                         dataitem['indications_and_usage'] = 'NA'
                         dataitem['extracted_entities'] = 'NA'
                 datalist.append(dataitem)
         data_to_persist['datalist'] = datalist
 
+        print("^^^^")
+        print(data_to_persist['datalist'])
         # write out the enriched data to local lambda storage as a json
         with open('/tmp/comprehended.json', 'w') as outfile:
                 json.dump(data_to_persist['datalist'], outfile)
 
         # setup the S3 url to write the enriched data. 
-        comprehend_output = 'comprehendoutput/' + query_execution_id + '/comprehended.json'
+        comprehend_output = 'fda-product-indications/comprehendoutput/' + query_execution_id + '/comprehended.json'
+        
         # write to s3 
-        s3.meta.client.upload_file('/tmp/comprehended.json', Bucket=bucket_name, Key=comprehend_output, ExtraArgs={'ServerSideEncryption':'AES256'})
+        s3.meta.client.upload_file('/tmp/comprehended.json', Bucket = comprehend_output_bucket_name, Key = comprehend_output, ExtraArgs={'ServerSideEncryption':'AES256'})
     # send the url of the written output file to the next lambda in the chain
     return comprehend_output        
