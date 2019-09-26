@@ -14,16 +14,16 @@ log_handler.setFormatter(logging.Formatter("[%(asctime)s] %(levelname)s:%(name)s
 logger.setLevel(logging.INFO)
 
 s3 = boto3.resource('s3')
-client = boto3.client(service_name='comprehendmedical', region_name='us-east-2')
+client = boto3.client(service_name='comprehendmedical', region_name='us-east-1')
 
 def handler(event, context):
     if event:
         logger.info(">> calling comprehend medical to extract entities")
-        
+
         # get the url of the athena results file from the event
         bucket_name = os.environ['bucket_name']
         comprehend_output_bucket_name = os.environ['comprehend_output_bucket_name']
-        file_keyname = event['data_node']['query_results']['results_file']   
+        file_keyname = event['data_node']['query_results']['results_file']
         print(">>> bucket name " + bucket_name)
         print(">>> comprehend output bucket name " + comprehend_output_bucket_name)
         print(">>> comprehend output file name " + file_keyname)
@@ -33,16 +33,16 @@ def handler(event, context):
         # read the iteration parameters from the event
         startIndex = event['iterator']['comprehendedItems']
         chunksize = event['iterator']['comprehend_chunksize']
-        totalItemsToComprehend = event['iterator']['totalItemsToComprehend'] 
-        iteration_num = event['iterator']['iteration_num'] 
+        totalItemsToComprehend = event['iterator']['totalItemsToComprehend']
+        iteration_num = event['iterator']['iteration_num']
 
         if ((startIndex + chunksize) <= totalItemsToComprehend):
             finalIndex = startIndex + chunksize
         else:
             finalIndex = totalItemsToComprehend
-        
+
         # read the csv file into a dataframe and pull out a subset (startIndex - finalIndex)
-        data = pd.read_csv(read_file_from_s3(bucket_name, file_keyname))         
+        data = pd.read_csv(read_file_from_s3(bucket_name, file_keyname))
         data_subset = data[startIndex:finalIndex]
         data_subset = data_subset.fillna('')
 
@@ -50,7 +50,7 @@ def handler(event, context):
         # iterate through the pandas datframe subset and call comprehend medical
         data_to_persist = {}
         datalist = []
-        for row in data_subset.itertuples():            
+        for row in data_subset.itertuples():
             dataitem = {}
             dataitem['id'] = row.id
             print(row.id)
@@ -78,10 +78,10 @@ def handler(event, context):
         with open('/tmp/comprehended.json', 'w') as outfile:
                 json.dump(data_to_persist['datalist'], outfile)
 
-        # setup the S3 url to write the comprehended data 
+        # setup the S3 url to write the comprehended data
         comprehend_output = 'fda-product-indications/comprehendoutput/comprehended-' + str(iteration_num) + '.json'
-        
-        # write to s3 
+
+        # write to s3
         s3.meta.client.upload_file('/tmp/comprehended.json', Bucket = comprehend_output_bucket_name, Key = comprehend_output, ExtraArgs={'ServerSideEncryption':'AES256'})
 
         # do iteration housekeeping
@@ -90,9 +90,9 @@ def handler(event, context):
         event['iterator']['iteration_num'] = iteration_num + 1
 
         # send the url of the written output file to the next lambda in the chain
-        return event['iterator']     
+        return event['iterator']
 
 def read_file_from_s3(bucket_name, key):
     print(">> reading S3 object...")
     response = s3.Object(bucket_name, key).get()
-    return response['Body']      
+    return response['Body']

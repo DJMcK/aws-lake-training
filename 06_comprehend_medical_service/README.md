@@ -28,8 +28,8 @@
 #### Layer References
 * Add the following layers to the Lambda function to use Numpy and Pandas libraries:
 ```
-arn:aws:lambda:us-east-2:259788987135:layer:AWSLambda-Python36-SciPy1x:2
-arn:aws:lambda:us-east-2:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
+arn:aws:lambda:us-east-1:259788987135:layer:AWSLambda-Python36-SciPy1x:2
+arn:aws:lambda:us-east-1:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
 ```
 
 #### Part 2 - Step Functions and Serverless Framework

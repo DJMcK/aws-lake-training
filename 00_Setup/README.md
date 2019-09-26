@@ -28,7 +28,7 @@
 
 In this section we will create a new IAM user with liberal programmatic access to our account. This IAM user will be used by the AWS CLI tools to interact with our account.
 
-* Open the [AWS IAM Dashboard](https://console.aws.amazon.com/iam/home?region=us-east-2#/home)
+* Open the [AWS IAM Dashboard](https://console.aws.amazon.com/iam/home?region=us-east-1#/home)
 * Go to "Users"
 * Click "Add User"
 * Enter a unique username (ex. `djm-programmatic`)

@@ -12,37 +12,30 @@ Now that we have the FDA dataset accessible to us via Athena, we'll want to crea
 
 We can do this by:
 
-1. Go to the [AWS Athena Dashboard](https://us-east-2.console.aws.amazon.com/athena/home?region=us-east-2#query)
+1. Go to the [AWS Athena Dashboard](https://us-east-1.console.aws.amazon.com/athena/home?region=us-east-1#query)
 2. Run each query from below individually (remember to replace `<YOUR_DATABASE>` from each query)
 
 **Product Routes:**
 ```sql
 CREATE OR REPLACE VIEW product_labels_routes AS
-SELECT id, LOWER(routes) as routes, effective_date FROM "<YOUR_DATABASE>"."fda_product"
+SELECT id, LOWER(routes) as routes, effective_date FROM "<YOUR_DATABASE>"."<YOUR_TABLE>"
 CROSS JOIN UNNEST(openfda.route) as t(routes);
 ```
 
 **Product Substance Names:**
 ```sql
 CREATE OR REPLACE VIEW product_labels_substances AS
-SELECT id, LOWER(substances) as substances, effective_date FROM "<YOUR_DATABASE>"."fda_product"
+SELECT id, LOWER(substances) as substances, effective_date FROM "<YOUR_DATABASE>"."<YOUR_TABLE>"
 CROSS JOIN UNNEST(openfda.substance_name) as t(substances);
 ```
 
 **Product Manufacturer Names:**
 ```sql
 CREATE OR REPLACE VIEW product_labels_manufacturers AS
-SELECT id, LOWER(manufacturers) as manufacturers, effective_date FROM "<YOUR_DATABASE>"."fda_product"
+SELECT id, LOWER(manufacturers) as manufacturers, effective_date FROM "<YOUR_DATABASE>"."<YOUR_TABLE>"
 CROSS JOIN UNNEST(openfda.manufacturer_name) as t(manufacturers);
 ```
 
-**Product Indications:**
-```sql
-CREATE OR REPLACE VIEW product_labels_indications AS
-SELECT id, LOWER(indications) as indications, effective_date FROM "<YOUR_DATABASE>"."fda_product"
-CROSS JOIN UNNEST(extracted_text) as t(indications);
-```
-
-> **Tip:** Each of these queries is essentially taking a column which contains an array of strings and unnesting those arrays into individual columns.
+> **Tip:** Each of these queries is essentially taking a column which contains an array of strings and unnest those arrays into individual columns.
 
 ## [Next »](../06_comprehend_medical_service/README.md)

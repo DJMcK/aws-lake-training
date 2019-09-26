@@ -32,7 +32,7 @@ In this section we will introduce you to [AWS Glue](https://aws.amazon.com/glue/
 
 ## Run The Crawler
 
-1. From the [AWS Glue Crawler Dashboard](https://us-east-2.console.aws.amazon.com/glue/home?region=us-east-2#catalog:tab=crawlers)
+1. From the [AWS Glue Crawler Dashboard](https://us-east-1.console.aws.amazon.com/glue/home?region=us-east-1#catalog:tab=crawlers)
 2. Click on your newly created Crawler
 3. Click "Run crawler"
 

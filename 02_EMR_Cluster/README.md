@@ -11,7 +11,7 @@ In this section we'll go through the process of setting up an EMR Cluster.
 
 ## Setup EC2 Key Pair
 
-1. Go to the [AWS **EC2** Dashboard](https://us-east-2.console.aws.amazon.com/ec2)
+1. Go to the [AWS **EC2** Dashboard](https://us-east-1.console.aws.amazon.com/ec2)
 2. From the menu select "Key Pairs"
 3. Click "Create Key Pair"
 4. Give it a unique name (ex. `djm-key-pair`)
@@ -20,7 +20,7 @@ In this section we'll go through the process of setting up an EMR Cluster.
 
 ## Setup an EMR Cluster
 
-1. Go to the [AWS **EMR** Dashboard](https://us-east-2.console.aws.amazon.com/elasticmapreduce)
+1. Go to the [AWS **EMR** Dashboard](https://us-east-1.console.aws.amazon.com/elasticmapreduce)
 2. Click "Create Cluster"
 3. Give your cluster a unique name (ex. `DJM`)
 ![General Configuration](./assets/emr-general-config.png "General Configuration")

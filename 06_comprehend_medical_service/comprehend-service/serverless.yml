@@ -6,16 +6,16 @@ provider:
   name: aws
   runtime: python3.6
   stage: dev
-  region: ${opt:region, 'us-east-2'}
+  region: ${opt:region, 'us-east-1'}
   memorySize: 3008
   timeout: 900
   reservedConcurrency: 1
   deploymentBucket:
     name: jr-comprehendmed-svc-1           # TODO replace bucket name
-  deploymentPrefix: deploy-${self:service}   
+  deploymentPrefix: deploy-${self:service}
   environment:
     bucket_name: jr-comprehendmed-svc-1     # TODO replace bucket name
-  # profile: training06 
+  # profile: training06
 
   iamRoleStatements:
     - Effect: "Allow"
@@ -24,7 +24,7 @@ provider:
 
     - Effect: "Allow"
       Action: s3:*
-      Resource: 
+      Resource:
         - "arn:aws:s3:::jr-comprehendmed-svc-1/*"    # TODO replace bucket name
         - "arn:aws:s3:::jr-comprehendmed-svc-1"      # TODO replace bucket name
         - "arn:aws:s3:::jr-lake-landing"             # TODO replace bucket name
@@ -32,19 +32,19 @@ provider:
         - "arn:aws:s3:::jr-lake-curated"                             # TODO replace bucket name
         - "arn:aws:s3:::jr-lake-curated/fda-product-indications/*"   # TODO replace bucket name
         - "arn:aws:s3:::djm-lake-curated"
-        - "arn:aws:s3:::djm-lake-curated/fda-product/*"         
+        - "arn:aws:s3:::djm-lake-curated/fda-product/*"
 
     - Effect: "Allow"
       Action:
         - comprehendmedical:DetectEntities
         - comprehendmedical:DetectPHI
-      Resource: 
+      Resource:
         - "*"
 
     - Effect: "Allow"
       Action:
         - athena:*
-      Resource: 
+      Resource:
         - "*"
 
     - Effect: "Allow"
@@ -52,15 +52,15 @@ provider:
         - glue:GetTable
         - glue:GetPartitions
         - glue:GetDatabase
-      Resource: 
-        - "*"  
+      Resource:
+        - "*"
 
-    - Effect: Allow 
+    - Effect: Allow
       Action:
         - logs:CreateLogGroup
         - logs:CreateLogStream
         - logs:PutLogEvents
-      Resource: "arn:aws:logs:#{AWS::Region}:#{AWS::AccountId}:log-group:/aws/lambda/*:*:*"     
+      Resource: "arn:aws:logs:#{AWS::Region}:#{AWS::AccountId}:log-group:/aws/lambda/*:*:*"
 
 plugins:
   - serverless-step-functions
@@ -102,7 +102,7 @@ functions:
     environment:
       comprehend_output_bucket_name: jr-lake-landing     # TODO replace bucket name
     layers:
-      - arn:aws:lambda:us-east-2:990712811979:layer:boto3layer:1
+      - arn:aws:lambda:us-east-1:990712811979:layer:boto3layer:1
       - arn:aws:lambda:${self:provider.region}:259788987135:layer:AWSLambda-Python36-SciPy1x:2
       - arn:aws:lambda:${self:provider.region}:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
 
@@ -110,7 +110,7 @@ functions:
     handler: concatenate_and_move_to_curated.handler
     environment:
       comprehend_landing_bucket_name: jr-lake-landing     # TODO replace bucket name
-      comprehend_curated_bucket_name: jr-lake-curated     # TODO replace bucket name    
+      comprehend_curated_bucket_name: jr-lake-curated     # TODO replace bucket name
     layers:
       - arn:aws:lambda:${self:provider.region}:259788987135:layer:AWSLambda-Python36-SciPy1x:2
       - arn:aws:lambda:${self:provider.region}:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
@@ -133,21 +133,21 @@ stepFunctions:
             Type: Task
             Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-configureCount"
             ResultPath: "$.iterator"
-            Next: Iterator 
+            Next: Iterator
           Iterator:
             Type: Task
             Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-iterator"
             ResultPath: "$.iterator"
-            Next: IsRecordCountReached  
+            Next: IsRecordCountReached
           IsRecordCountReached:
             Type: Choice
             Choices:
               - Variable: "$.iterator.continue_iterating"
-                BooleanEquals: True 
+                BooleanEquals: True
                 Next: CallComprehend
               - Variable: "$.iterator.continue_iterating"
                 BooleanEquals: False
-                Next: IterationComplete            
+                Next: IterationComplete
           CallComprehend:
             Comment: "Calls comprehend to extract entities"
             Type: Task
@@ -156,16 +156,16 @@ stepFunctions:
             Next: Iterator
           IterationComplete:
             Type: Pass
-            Next: ConcatenateAndMoveToCurated   
+            Next: ConcatenateAndMoveToCurated
           ConcatenateAndMoveToCurated:
             Comment: "Calls comprehend to extract entities"
             Type: Task
             Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-concatenateAndMoveToCurated"
             ResultPath: "$.iterator"
-            Next: Done                     
+            Next: Done
           Done:
             Type: Pass
-            End: true  
+            End: true
 
 
 resources:
