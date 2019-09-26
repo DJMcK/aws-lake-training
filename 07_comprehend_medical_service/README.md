@@ -24,6 +24,12 @@
 * Make sure you have the latest code from the repository. Run 'git pull' in your shell
 * *IMPORTANT: Replace bucket name in serverless.yml to your bucket.*
 
+#### Demo Lambda function references
+Add the following layers to the Lambda function to use Numpy and Pandas libraries:
+
+arn:aws:lambda:us-east-2:259788987135:layer:AWSLambda-Python36-SciPy1x:2
+
+arn:aws:lambda:us-east-2:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
 
 #### Install Serverless Framework
 * Install nodejs from https://nodejs.org/en/download/
@@ -52,10 +58,3 @@ npm install serverless-pseudo-parameters
 ```
 serverless deploy --verbose --force
 ```
-
-#### Notes:
-
-###### Demo Lambda
-Numpy layer
-
-arn:aws:lambda:us-east-2:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
