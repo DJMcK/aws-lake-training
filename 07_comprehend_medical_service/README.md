@@ -21,16 +21,18 @@
     * uploadsfolder
 
 #### Repository
-* Make sure you have the latest code from the repository. Run 'git pull' in your shell
+* Make sure you have the latest code from the repository. Run ```'git pull'``` in your terminal.
 * *IMPORTANT: Replace bucket name in serverless.yml to your bucket.*
 
-#### Demo Lambda function references
-Add the following layers to the Lambda function to use Numpy and Pandas libraries:
-
+#### Part 1 - Demo Lambda
+#### Layer References
+* Add the following layers to the Lambda function to use Numpy and Pandas libraries:
+```
 arn:aws:lambda:us-east-2:259788987135:layer:AWSLambda-Python36-SciPy1x:2
-
 arn:aws:lambda:us-east-2:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
+```
 
+#### Part 2 - Step Functions and Serverless Framework
 #### Install Serverless Framework
 * Install nodejs from https://nodejs.org/en/download/
 
