@@ -40,7 +40,7 @@ arn:aws:lambda:us-east-2:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x
     ```
     npm install -g serverless
     ```
-* Check serverless version 
+* Check serverless version
     ```
     serverless --version
     ```
@@ -60,3 +60,5 @@ npm install serverless-pseudo-parameters
 ```
 serverless deploy --verbose --force
 ```
+
+## [Next »](../07_FDA_Product_Indications/README.md)

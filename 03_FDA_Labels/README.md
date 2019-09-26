@@ -42,4 +42,4 @@ aws s3 sync s3://download.open.fda.gov/2019-08-10/drug/label s3://$STACK_NAME-ra
 4. Update the values for `BUCKET_LANDING` and `BUCKET_CURATED` with the appropriate values
 5. Copy the code and paste it into the `pyspark` shell
 
-## [Next »](../04_DBpedia/README.md)
+## [Next »](../04_Glue_Crawler/README.md)

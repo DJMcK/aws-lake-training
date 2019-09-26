@@ -43,4 +43,4 @@ The Crawler will now do the following:
 3. Automatically infer common data structures
 4. Populate your configured AWS Athena database with tables for the data identified
 
-## [Next »](../07_comprehend_medical_service/README.md)
+## [Next »](../05_Athena/README.md)

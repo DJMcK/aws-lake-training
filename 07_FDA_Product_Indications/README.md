@@ -7,3 +7,5 @@
 3. Open [`fda.indications.py`](./fda.indications.py) in an editor
 4. Update the values for `BUCKET_LANDING` and `BUCKET_CURATED` with the appropriate values
 5. Copy the code and paste it into the `pyspark` shell
+
+## [Next »](../08_Terminate_EMR_Cluster/README.md)

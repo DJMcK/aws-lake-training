@@ -44,3 +44,5 @@ CROSS JOIN UNNEST(extracted_text) as t(indications);
 ```
 
 > **Tip:** Each of these queries is essentially taking a column which contains an array of strings and unnesting those arrays into individual columns.
+
+## [Next »](../06_comprehend_medical_service/README.md)

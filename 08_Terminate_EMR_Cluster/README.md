@@ -5,5 +5,3 @@ To avoid a nasty bill at the end of the month (not that I've ever done this...),
 1. Browse to the EMR Dashboard
 2. Select your Cluster
 3. Click "Terminate"
-
-## [Next »](../06_Glue_Crawler/README.md)
