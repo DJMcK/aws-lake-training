@@ -37,7 +37,7 @@ def deflate(x):
 
 # Load the raw data as binary files
 fda_files = sc.binaryFiles(
-    "s3://"+BUCKET_FDA+"/2019-08-10/drug/label/*.json.zip"
+    "s3://"+BUCKET_FDA+"/drug/label/*.json.zip"
 )
 
 # Deflate the contents
@@ -45,12 +45,12 @@ fda_data = fda_files.map(deflate)
 
 # Store the JSON with GZIP compression
 fda_data.saveAsTextFile(
-    path="s3://"+BUCKET_RAW+"/fda/2019-08-10/drug/label/",
+    path="s3://"+BUCKET_RAW+"/fda/drug/label/",
     compressionCodecClass="org.apache.hadoop.io.compress.GzipCodec"
 )
 
 # Read the JSON data as a data frame
-raw_data = "s3://"+BUCKET_RAW+"/fda/2019-08-10/drug/label/part-*"
+raw_data = "s3://"+BUCKET_RAW+"/fda/drug/label/part-*"
 dataframe = spark.read.option(
     "multiLine", True
 ).option(
@@ -72,5 +72,5 @@ results.write.mode(
     "compression",
     "gzip"
 ).save(
-    "s3://"+BUCKET_LANDING+"/fda/2019-08-10/drug/label/"
+    "s3://"+BUCKET_LANDING+"/fda/drug/label/"
 )

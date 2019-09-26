@@ -8,7 +8,7 @@ BUCKET_LANDING = "djm-lake-landing"
 BUCKET_CURATED = "djm-lake-curated"
 
 # Read the JSON data as a data frame
-landed_data = "s3://"+BUCKET_LANDING+"/fda/2019-08-10/drug/label/part-*"
+landed_data = "s3://"+BUCKET_LANDING+"/fda/drug/label/part-*"
 dataframe = spark.read.json(landed_data)
 
 # Data transformation - string to datetime
