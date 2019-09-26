@@ -26,7 +26,7 @@ In this section we'll go through the process of setting up an EMR Cluster.
 ![General Configuration](./assets/emr-general-config.png "General Configuration")
 4. Under "Software configuration" select `Spark: [...]`
 ![Software Configuration](./assets/emr-software-config.png "Software Configuration")
-5. Under "Hardware configuration" select `m5.xlarge`
+5. Under "Hardware configuration" select `r5.xlarge`
 6. Under "Hardware configuration" set "Number of Instances" to `4`
 ![Hardware Configuration](./assets/emr-hardware-config.png "Hardware Configuration")
 7. Under "Security and access" select your "EC2 key pair"
@@ -40,8 +40,9 @@ Once your cluster is in a `provisioned` state. You can click on "SSH" next to "M
 > ```bash
 > aws emr ssh --cluster-id <ID> --key-pair-file ~/path/to/file.pem
 > ```
+> **Windows:** `aws emr ssh --cluster-id <ID> --key-pair-file C:\path\to\file.ppk`
 
-### Windows - `adding extra steps since 1985` 👎
+### Older Versions of Windows - `adding extra steps since 1985` 👎
 
 On Windows we need to perform a few extra steps in order to connect if we are just using a tool like PuTTY.
 
@@ -53,9 +54,5 @@ On Windows we need to perform a few extra steps in order to connect if we are ju
 6. You should receive a message "Successfully imported [...]"
 7. Click "Save private key"
 8. Save to an easy to access location
-
-```console
-aws emr ssh --cluster-id <ID> --key-pair-file C:\path\to\file.ppk
-```
 
 ## [Next »](../03_FDA_Labels/README.md)
