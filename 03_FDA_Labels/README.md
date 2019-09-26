@@ -15,10 +15,6 @@ aws s3 sync s3://download.open.fda.gov/2019-08-10/drug/label s3://$STACK_NAME-ra
 
 ## Land Data
 
-In order to land the data, we will be using an EMR Cluster with a very large EC2 instance type.
-
-> **Note:** As part of the training, the instructor will perform this phase to show how to use EMR and expose the landed data set.
-
 **Objectives for this section:**
 
 1. Take the raw `zip` "parts" as an input
