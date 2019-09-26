@@ -27,11 +27,12 @@ provider:
       Resource: 
         - "arn:aws:s3:::jr-comprehendmed-svc-1/*"    # TODO replace bucket name
         - "arn:aws:s3:::jr-comprehendmed-svc-1"      # TODO replace bucket name
-        - "arn:aws:s3:::djm-lake-landing" 
-        - "arn:aws:s3:::djm-lake-landing/fda-product-indications/*" 
-        - "arn:aws:s3:::djm-lake-curated" 
-        - "arn:aws:s3:::djm-lake-curated/fda-product/*" 
-        - "arn:aws:s3:::djm-lake-curated/fda-product-indications/*" 
+        - "arn:aws:s3:::jr-lake-landing"             # TODO replace bucket name
+        - "arn:aws:s3:::jr-lake-landing/fda-product-indications/*"   # TODO replace bucket name
+        - "arn:aws:s3:::jr-lake-curated"                             # TODO replace bucket name
+        - "arn:aws:s3:::jr-lake-curated/fda-product-indications/*"   # TODO replace bucket name
+        - "arn:aws:s3:::djm-lake-curated"
+        - "arn:aws:s3:::djm-lake-curated/fda-product/*"         
 
     - Effect: "Allow"
       Action:
@@ -52,20 +53,7 @@ provider:
         - glue:GetPartitions
         - glue:GetDatabase
       Resource: 
-        - "*"
-
-    - Effect: "Allow"
-      Action:
-        - dynamodb:DescribeTable
-        - dynamodb:Query
-        - dynamodb:Scan
-        - dynamodb:GetItem
-        - dynamodb:PutItem
-        - dynamodb:UpdateItem
-        - dynamodb:DeleteItem
-        - dynamodb:BatchWriteItem
-      Resource: 
-        - "Fn::GetAtt": [ ComprehendOutputTable, Arn ]      
+        - "*"  
 
     - Effect: Allow 
       Action:
@@ -112,7 +100,7 @@ functions:
   callComprehend:
     handler: call_comprehend.handler
     environment:
-      comprehend_output_bucket_name: djm-lake-landing     # TODO replace bucket name
+      comprehend_output_bucket_name: jr-lake-landing     # TODO replace bucket name
     layers:
       - arn:aws:lambda:us-east-2:990712811979:layer:boto3layer:1
       - arn:aws:lambda:${self:provider.region}:259788987135:layer:AWSLambda-Python36-SciPy1x:2
@@ -121,8 +109,8 @@ functions:
   concatenateAndMoveToCurated:
     handler: concatenate_and_move_to_curated.handler
     environment:
-      comprehend_landing_bucket_name: djm-lake-landing     # TODO replace bucket name
-      comprehend_curated_bucket_name: djm-lake-curated     # TODO replace bucket name    
+      comprehend_landing_bucket_name: jr-lake-landing     # TODO replace bucket name
+      comprehend_curated_bucket_name: jr-lake-curated     # TODO replace bucket name    
     layers:
       - arn:aws:lambda:${self:provider.region}:259788987135:layer:AWSLambda-Python36-SciPy1x:2
       - arn:aws:lambda:${self:provider.region}:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
@@ -181,47 +169,9 @@ stepFunctions:
 
 
 resources:
-  Resources:
-    ComprehendOutputTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        TableName: comprehendoutputtable          # TODO replace table name
-        AttributeDefinitions:
-          - AttributeName: textId
-            AttributeType: S                                                   
-        KeySchema:
-          - AttributeName: textId
-            KeyType: HASH       
-        ProvisionedThroughput:
-          ReadCapacityUnits: "15"
-          WriteCapacityUnits: "15"  
 
   Outputs:
     ComprehendStateMachine:
       Description: ARN of ComprehendStateMachine
       Value:
         Ref: ComprehendStateMachine
-        
-        
-# # you can add CloudFormation resource templates here
-# resources:
-#  Resources:
-# #    ComprehendMedSvcBucket:
-# #      Type: AWS::S3::Bucket
-# #      Properties:
-# #        BucketName: jr-comprehendmed-svc-1
-# #        BucketEncryption: 
-# #         ServerSideEncryptionConfiguration: 
-# #           ServerSideEncryptionByDefault: 
-# #             SSEAlgorithm: AES256
-
-
-#  Outputs:
-#   comprehendTutorialStepfunction:
-#     Description: ARN of Comprehend Tutorial StateMachine
-#     Value:
-#       Ref: ComprehendTutorialStateMachine
-# #     ComprehendMedSvcBucketName:
-# #       Description: "bucket for comprehend medical service artefacts"
-# #       Value:
-# #         Ref: ComprehendMedSvcBucket

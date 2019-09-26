@@ -20,7 +20,7 @@ DATABASE = 'djm-lake'
 RETRY_COUNT = 10
 
 #query_all_indications = 'SELECT id, indications_and_usage FROM fdaparquet2.druglabelsrefined limit 100'
-query_all_indications = 'SELECT id, indications_and_usage FROM "djm-lake"."fda_product" where year >= \'2017\' and year <= \'2019\''
+query_all_indications = 'SELECT id, indications_and_usage FROM "djm-lake"."fda_product" where year >= \'2017\' and year <= \'2019\' limit 2000'
 
 def handler(event, context):
     if event:
