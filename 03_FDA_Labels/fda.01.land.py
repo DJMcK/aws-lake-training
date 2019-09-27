@@ -1,3 +1,7 @@
+# TODO: Update with your stack name...
+STACK_NAME = "djm"
+
+
 from zipfile import ZipFile
 from io import BytesIO
 from pyspark.sql.functions import explode
@@ -7,8 +11,8 @@ from pyspark.sql.functions import explode
 # CONFIGURATION
 ####
 BUCKET_FDA = "download.open.fda.gov"
-BUCKET_RAW = "djm-lake-raw"
-BUCKET_LANDING = "djm-lake-landing"
+BUCKET_LANDING = STACK_NAME + "-landing"
+BUCKET_CURATED = STACK_NAME + "-curated"
 
 
 # Deflate

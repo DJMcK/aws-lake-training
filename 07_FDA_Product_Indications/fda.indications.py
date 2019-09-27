@@ -1,8 +1,11 @@
+# TODO: Update with your stack name...
+STACK_NAME = "djm"
+
 ####
 # CONFIGURATION
 ####
-BUCKET_LANDING = "djm-lake-landing"
-BUCKET_CURATED = "djm-lake-curated"
+BUCKET_LANDING = STACK_NAME + "-landing"
+BUCKET_CURATED = STACK_NAME + "-curated"
 
 # Create a copy of the original FDA Product dataset in our lake
 source_path = "s3://"+BUCKET_CURATED+"/fda-product"

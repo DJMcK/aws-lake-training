@@ -1,11 +1,15 @@
+# TODO: Update with your stack name...
+STACK_NAME = "djm"
+
+
 from pyspark.sql.functions import to_date, year, month, col
 from pyspark.sql.types import IntegerType
 
 ####
 # CONFIGURATION
 ####
-BUCKET_LANDING = "djm-lake-landing"
-BUCKET_CURATED = "djm-lake-curated"
+BUCKET_LANDING = STACK_NAME + "-landing"
+BUCKET_CURATED = STACK_NAME + "-curated"
 
 # Read the JSON data as a data frame
 landed_data = "s3://"+BUCKET_LANDING+"/fda/drug/label/part-*"
