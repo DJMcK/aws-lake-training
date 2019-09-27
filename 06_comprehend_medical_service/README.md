@@ -57,14 +57,14 @@ We will use the boto3 (updated version), pandas and numpy layers in our lambda f
 
 - Use the following settings to create the layers in your lambda console.
 ```
-boto3layer
-https://s3.amazonaws.com/comprehend-layers/boto3layer.zip
-python3.6
+Name : boto3layer
+Upload a file from Amazon S3 : https://s3.amazonaws.com/comprehend-layers/boto3layer.zip
+Compatible runtimes : python3.6
 ```
 ```
-pandas-xlrd-layer-Python36-Pandas23x
-https://s3.amazonaws.com/comprehend-layers/pandas-xlrd-layer-Python36-Pandas23x.zip
-python3.6
+Name : pandas-xlrd-layer-Python36-Pandas23x
+Upload a file from Amazon S3 : https://s3.amazonaws.com/comprehend-layers/pandas-xlrd-layer-Python36-Pandas23x.zip
+Compatible runtimes : python3.6
 ```
 
 (Note: We do not need to create numpy layer. Numpy layer is available within AWS Lambda.)
