@@ -14,19 +14,19 @@
 
 ## Setup
 #### S3 Bucket
-* Create a S3 bucket for the comprehend pipeline. e.g. jr-comprehend
+* Create a S3 bucket for the comprehend pipeline. e.g. ```jr-comprehend```
 
 #### Folder structure
 Create the following folders in your buckets
-- 'jr-comprehend'
-    - create folder 'uploadsfolder'
-    - create folder 'athenaoutput'
+- ```jr-comprehend```
+    - create folder ```uploadsfolder```
+    - create folder ```athenaoutput```
 
-- 'jr-landing'  (use your landing bucket)  
-    - create folder 'fda-product-indications'
+- ```jr-landing```  (use your landing bucket)  
+    - create folder ```fda-product-indications```
 
 #### Repository
-* Make sure you have the latest code from the repository. Run ```'git pull'``` in your terminal.
+* Make sure you have the latest code from the repository. Run ```git pull``` in your terminal.
 * *IMPORTANT: Replace bucket name in serverless.yml to your bucket.*
 
 #### Install Serverless Framework
