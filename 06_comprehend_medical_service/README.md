@@ -46,6 +46,34 @@ npm install --save-dev serverless-step-functions
 
 npm install serverless-pseudo-parameters
 ```
+#### Folder structure
+create bucket
+- 'jr-comprehend'
+    - create folder 'athenaoutput'
+
+- 'jr-landing'  (use your landing bucket)  
+    - create folder 'fda-product-indications'
+
+#### Layers
+We will use the boto3 (updated version), pandas and numpy layers in our lambda functions.
+
+- Use the following settings to create the layers in your lambda console.
+```
+boto3layer
+https://s3.amazonaws.com/comprehend-layers/boto3layer.zip
+python3.6
+```
+```
+pandas-xlrd-layer-Python36-Pandas23x
+https://s3.amazonaws.com/comprehend-layers/pandas-xlrd-layer-Python36-Pandas23x.zip
+python3.6
+```
+
+(Note: We do not need to create numpy layer. Numpy layer is available within AWS Lambda.)
+```
+Numpy
+arn:aws:lambda:us-east-1:668099181075:layer:AWSLambda-Python36-SciPy1x:2
+```
 
 #### Part 1 - Demo Lambda
 #### Layer References
