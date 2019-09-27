@@ -6,7 +6,7 @@ Now that we have some new information sitting in our "landing" bucket, we'll wan
 
 Using our EMR cluster, we'll load both our FDA Product Labels data and our indications extraction data. Using the shared ID field as a key, we'll then be able to join the data together and save that information back to the "curated" bucket ready for consumption.
 
-1. Connect to your EMR Cluster (as described in [04_EMR_Cluster](../02_EMR_Cluster/README.md))
+1. Connect to your EMR Cluster (as described in [02_EMR_Cluster](../02_EMR_Cluster/README.md))
 2. Run `pyspark`
 3. Open [`fda.indications.py`](./fda.indications.py) in an editor
 4. Update the values for `BUCKET_LANDING` and `BUCKET_CURATED` with the appropriate values
