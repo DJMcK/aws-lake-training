@@ -14,11 +14,16 @@
 
 ## Setup
 #### S3 Bucket
-* We will use the bucket created during step '01_Buckets' for this section
-* Create following folders in your bucket:
-    * athenaoutput
-    * comprehendoutput
-    * uploadsfolder
+* Create a S3 bucket for the comprehend pipeline. e.g. jr-comprehend
+
+#### Folder structure
+Create the following folders in your buckets
+- 'jr-comprehend'
+    - create folder 'uploadsfolder'
+    - create folder 'athenaoutput'
+
+- 'jr-landing'  (use your landing bucket)  
+    - create folder 'fda-product-indications'
 
 #### Repository
 * Make sure you have the latest code from the repository. Run ```'git pull'``` in your terminal.
@@ -46,13 +51,6 @@ npm install --save-dev serverless-step-functions
 
 npm install serverless-pseudo-parameters
 ```
-#### Folder structure
-create bucket
-- 'jr-comprehend'
-    - create folder 'athenaoutput'
-
-- 'jr-landing'  (use your landing bucket)  
-    - create folder 'fda-product-indications'
 
 #### Layers
 We will use the boto3 (updated version), pandas and numpy layers in our lambda functions.
