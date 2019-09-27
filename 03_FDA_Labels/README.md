@@ -36,7 +36,7 @@ aws s3 sync s3://download.open.fda.gov/2019-08-10/drug/label s3://$STACK_NAME-ra
 
 > **Prerequisite:** The output from the [Land Data](#land-data) should be in your "landing" bucket ready for curation.
 
-1. Connect to your EMR Cluster (as described in [04_EMR_Cluster](../02_EMR_Cluster/README.md))
+1. Connect to your EMR Cluster (as described in [02_EMR_Cluster](../02_EMR_Cluster/README.md))
 2. Run `pyspark`
 3. Open [`fda.02.curate.py`](./fda.02.curate.py) in an editor
 4. Update the values for `BUCKET_LANDING` and `BUCKET_CURATED` with the appropriate values
