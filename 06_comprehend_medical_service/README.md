@@ -81,7 +81,7 @@ arn:aws:lambda:us-east-1:259788987135:layer:AWSLambda-Python36-SciPy1x:2
 arn:aws:lambda:us-east-1:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
 ```
 
-
+#### Part 2 - Deploy Comprehend Medical pipeline
 #### Deploy
 ```
 serverless deploy --verbose --force
