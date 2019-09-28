@@ -12,7 +12,7 @@ from pyspark.sql.functions import explode
 ####
 BUCKET_FDA = "download.open.fda.gov"
 BUCKET_LANDING = STACK_NAME + "-landing"
-BUCKET_CURATED = STACK_NAME + "-curated"
+BUCKET_RAW = STACK_NAME + "-raw"
 
 
 # Deflate
