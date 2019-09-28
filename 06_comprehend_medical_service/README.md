@@ -60,6 +60,7 @@ get ARN from a sample lambda
 <pandas layer ARN>
 ```
 
+#### Part 2 - Deploy Comprehend Medical pipeline
 #### Install Serverless Framework
 * Install nodejs from https://nodejs.org/en/download/
 
@@ -82,9 +83,6 @@ npm install --save-dev serverless-step-functions
 
 npm install serverless-pseudo-parameters
 ```
-
-
-#### Part 2 - Deploy Comprehend Medical pipeline
 #### replace bucket names
 #### replace layer arn
 arn:aws:lambda:us-east-1:990712811979:layer:boto3layer:2
