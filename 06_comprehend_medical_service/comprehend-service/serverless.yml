@@ -11,10 +11,10 @@ provider:
   timeout: 900
   reservedConcurrency: 1
   deploymentBucket:
-    name: jr-comprehendmed-svc-1           # TODO replace bucket name
+    name: jr-comprehend           # TODO replace bucket name
   deploymentPrefix: deploy-${self:service}
   environment:
-    bucket_name: jr-comprehendmed-svc-1     # TODO replace bucket name
+    bucket_name: jr-comprehend     # TODO replace bucket name
   # profile: training06
 
   iamRoleStatements:
@@ -25,14 +25,13 @@ provider:
     - Effect: "Allow"
       Action: s3:*
       Resource:
-        - "arn:aws:s3:::jr-comprehendmed-svc-1/*"    # TODO replace bucket name
-        - "arn:aws:s3:::jr-comprehendmed-svc-1"      # TODO replace bucket name
-        - "arn:aws:s3:::jr-lake-landing"             # TODO replace bucket name
-        - "arn:aws:s3:::jr-lake-landing/fda-product-indications/*"   # TODO replace bucket name
-        - "arn:aws:s3:::jr-lake-curated"                             # TODO replace bucket name
-        - "arn:aws:s3:::jr-lake-curated/fda-product-indications/*"   # TODO replace bucket name
-        - "arn:aws:s3:::djm-lake-curated"
-        - "arn:aws:s3:::djm-lake-curated/fda-product/*"
+        - "arn:aws:s3:::jr-comprehend/*"    # TODO replace bucket name
+        - "arn:aws:s3:::jr-comprehend"      # TODO replace bucket name
+        - "arn:aws:s3:::djm-landing"             # TODO point to landing bucket
+        - "arn:aws:s3:::djm-landing/fda-product-indications/*"   # TODO point to landing bucket
+        - "arn:aws:s3:::djm-curated"                             # TODO point to curated bucket
+        - "arn:aws:s3:::djm-curated/fda-product-indications/*"   # TODO point to curated bucket
+        - "arn:aws:s3:::djm-curated/*"                           # TODO point to curated bucket
 
     - Effect: "Allow"
       Action:
@@ -91,29 +90,20 @@ functions:
     environment:
       comprehend_chunksize: 500
     layers:
-      - arn:aws:lambda:${self:provider.region}:259788987135:layer:AWSLambda-Python36-SciPy1x:2
-      - arn:aws:lambda:${self:provider.region}:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
+      - arn:aws:lambda:us-east-1:668099181075:layer:AWSLambda-Python36-SciPy1x:2                  # numpy layer
+      - arn:aws:lambda:us-east-1:990712811979:layer:pandas-xlrd-layer-Python36-Pandas23x:2        # pandas layer
 
   iterator:
     handler: iterator.handler
 
-  callComprehend:
+  callComprehendAndWriteToLanding:
     handler: call_comprehend.handler
     environment:
-      comprehend_output_bucket_name: jr-lake-landing     # TODO replace bucket name
+      comprehend_output_bucket_name: djm-landing     # TODO replace bucket name
     layers:
-      - arn:aws:lambda:us-east-1:990712811979:layer:boto3layer:1
-      - arn:aws:lambda:${self:provider.region}:259788987135:layer:AWSLambda-Python36-SciPy1x:2
-      - arn:aws:lambda:${self:provider.region}:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
-
-  concatenateAndMoveToCurated:
-    handler: concatenate_and_move_to_curated.handler
-    environment:
-      comprehend_landing_bucket_name: jr-lake-landing     # TODO replace bucket name
-      comprehend_curated_bucket_name: jr-lake-curated     # TODO replace bucket name
-    layers:
-      - arn:aws:lambda:${self:provider.region}:259788987135:layer:AWSLambda-Python36-SciPy1x:2
-      - arn:aws:lambda:${self:provider.region}:874346574520:layer:pandas-xlrd-layer-Python36-Pandas23x:5
+      - arn:aws:lambda:us-east-1:990712811979:layer:boto3layer:2                                  # boto3 layer
+      - arn:aws:lambda:us-east-1:668099181075:layer:AWSLambda-Python36-SciPy1x:2                  # numpy layer
+      - arn:aws:lambda:us-east-1:990712811979:layer:pandas-xlrd-layer-Python36-Pandas23x:2        # pandas layer
 
 stepFunctions:
   stateMachines:
@@ -144,24 +134,18 @@ stepFunctions:
             Choices:
               - Variable: "$.iterator.continue_iterating"
                 BooleanEquals: True
-                Next: CallComprehend
+                Next: CallComprehendAndWriteToLanding
               - Variable: "$.iterator.continue_iterating"
                 BooleanEquals: False
                 Next: IterationComplete
-          CallComprehend:
+          CallComprehendAndWriteToLanding:
             Comment: "Calls comprehend to extract entities"
             Type: Task
-            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-callComprehend"
+            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-callComprehendAndWriteToLanding"
             ResultPath: "$.iterator"
             Next: Iterator
           IterationComplete:
             Type: Pass
-            Next: ConcatenateAndMoveToCurated
-          ConcatenateAndMoveToCurated:
-            Comment: "Calls comprehend to extract entities"
-            Type: Task
-            Resource: "arn:aws:lambda:#{AWS::Region}:#{AWS::AccountId}:function:${self:service}-${opt:stage}-concatenateAndMoveToCurated"
-            ResultPath: "$.iterator"
             Next: Done
           Done:
             Type: Pass

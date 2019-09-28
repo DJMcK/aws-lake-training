@@ -15,12 +15,12 @@ s3 = boto3.resource('s3')
 athena = boto3.client('athena')
 
 # setup configuration
-S3_OUTPUT = 's3://jr-comprehendmed-svc-1/athenaoutput'   # TODO replace bucket name
-DATABASE = 'djm-lake'
+S3_OUTPUT = 's3://jr-comprehend/athenaoutput'   # TODO replace bucket name
+DATABASE = 'djm'
 RETRY_COUNT = 10
 
-#query_all_indications = 'SELECT id, indications_and_usage FROM fdaparquet2.druglabelsrefined limit 100'
-query_all_indications = 'SELECT id, indications_and_usage FROM "djm-lake"."fda_product" where year >= \'2017\' and year <= \'2019\' limit 2000'
+# query all indications from last 2 years
+query_all_indications = 'SELECT id, indications_and_usage FROM "djm"."djm_curated" where year >= \'2017\' and year <= \'2019\''
 
 def handler(event, context):
     if event:
