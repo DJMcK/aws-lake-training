@@ -1,5 +1,6 @@
 # Lake Buckets
 
+In this section, we're going to spin up some AWS S3 Buckets for all of our source data and artifacts. To do this, we're also going to introduce AWS CloudFormation as our deployment mechanism.
 
 ## Lake Name
 
