@@ -7,7 +7,7 @@ import pandas as pd
 s3 = boto3.resource('s3')
 
 
-def handler(event, context):
+def lambda_handler(event, context):
     if event:
         print('>> event: ' + json.dumps(event))
         bucket_name = event['Records'][0]['s3']['bucket']['name']
