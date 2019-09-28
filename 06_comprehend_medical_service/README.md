@@ -85,9 +85,11 @@ npm install serverless-pseudo-parameters
 ```
 #### replace bucket names
 #### replace layer arn
+```
 arn:aws:lambda:us-east-1:990712811979:layer:boto3layer:2
 arn:aws:lambda:us-east-1:990712811979:layer:pandas-xlrd-layer-Python36-Pandas23x:2
 arn:aws:lambda:us-east-1:668099181075:layer:AWSLambda-Python36-SciPy1x:2  (get this from a lambda)
+```
 #### Deploy
 ```
 serverless deploy --verbose --force
