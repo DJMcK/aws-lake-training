@@ -29,29 +29,6 @@ Create the following folders in your buckets
 * Make sure you have the latest code from the repository. Run ```git pull``` in your terminal.
 * *IMPORTANT: Replace bucket name in serverless.yml to your bucket.*
 
-#### Install Serverless Framework
-* Install nodejs from https://nodejs.org/en/download/
-
-* Install serverless framework
-    ```
-    npm install -g serverless
-    ```
-* Check serverless version
-    ```
-    serverless --version
-    ```
-
-Reference: https://serverless.com/framework/docs/providers/aws/guide/installation/
-
-#### Plugins
-* *change directory to comprehend-service folder in your terminal.*
-* install following plugins
-```
-npm install --save-dev serverless-step-functions
-
-npm install serverless-pseudo-parameters
-```
-
 #### Layers
 We will use the boto3 (updated version), pandas and numpy layers in our lambda functions.
 
@@ -75,7 +52,6 @@ Compatible runtimes : python3.6
 Numpy
 get ARN from a sample lambda
 ```
-
 #### Part 1 - Demo Lambda
 #### Layer References
 * Add the following layers to the Lambda function to use Numpy and Pandas libraries:
@@ -83,6 +59,30 @@ get ARN from a sample lambda
 <numpy layer ARN>
 <pandas layer ARN>
 ```
+
+#### Install Serverless Framework
+* Install nodejs from https://nodejs.org/en/download/
+
+* Install serverless framework
+    ```
+    npm install -g serverless
+    ```
+* Check serverless version
+    ```
+    serverless --version
+    ```
+
+Reference: https://serverless.com/framework/docs/providers/aws/guide/installation/
+
+#### Plugins
+* *change directory to comprehend-service folder in your terminal.*
+* install following plugins
+```
+npm install --save-dev serverless-step-functions
+
+npm install serverless-pseudo-parameters
+```
+
 
 #### Part 2 - Deploy Comprehend Medical pipeline
 #### replace bucket names
