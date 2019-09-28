@@ -19,6 +19,7 @@ S3_OUTPUT = 's3://jr-comprehend/athenaoutput'   # TODO replace bucket name
 DATABASE = 'djm'
 RETRY_COUNT = 10
 
+# query all indications from last 2 years
 query_all_indications = 'SELECT id, indications_and_usage FROM "djm"."djm_curated" where year >= \'2017\' and year <= \'2019\''
 
 def handler(event, context):
